@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    html {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+    }
+    body {
+        padding: 10px;
+    }
+
+    #container {
+        max-width: 800px;
+    }
+    .padding-md {
+        padding: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th {
+        padding: .75rem;
+        text-align: left;
+        border-bottom: 2px solid gray;
+    }
+    td {
+        padding: .75rem;
+        border-bottom: 1px solid #dcdcdc;
+    }
+    tr:last-of-type td {
+        border-bottom: none;
+    }
+    .text-center {
+        text-align: center;
+    }
+    button:focus {
+        outline: none !important;
+    }
+    .btn-stop {
+        padding: 5px;
+        color: #ffffff;
+        background-color: #fb512d;
+        font-size: .8rem;
+        border-radius: 5px;
+    }
+    .btn-start {
+        padding: 5px;
+        color: #ffffff;
+        background-color: #2bca5a;
+        font-size: .8rem;
+        border-radius: 5px;
+    }
+</style>
+
+<h1>Bot Monitor</h1>
+
+<div id="container" class="padding-md">
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Level</th>
+            <th>Current State</th>
+            <th>Last Updated</th>
+            <th class="text-center">Stop</th>
+            <th class="text-center">Start</th>
+        </tr>
+        </thead>
+        <tbody id="bot-table">
+        <tr>
+            <td colspan="6">LOADING...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            var issueInstruction = function(botId, command) {
+                $.ajax({
+                    url: "/Home/IssueInstruction",
+                    type: 'POST',
+                    data: {
+                        botId: botId,
+                        command: command
+                    }
+                });
+            }
+
+            $(document).on('click', '.btn-stop', function (element) {
+                issueInstruction(element.target.dataset.botId, 'STOP');
+            });
+
+            $(document).on('click', '.btn-start', function (element) {
+                issueInstruction(element.target.dataset.botId, 'START');
+            });
+
+            setInterval(
+                function() {
+                    $.ajax({
+                        url: "/Home/GetData",
+                        success: function (data) {
+                            console.log(data);
+                            var tbody = document.getElementById("bot-table");
+                            while (tbody.firstChild) {
+                                tbody.removeChild(tbody.firstChild);
+                            }
+
+                            data.forEach(function (bot) {
+                                var markup =
+                                    '<tr>' +
+                                        '<td>' + bot.name + '</td>' +
+                                        '<td>' + bot.level + '</td>' +
+                                        '<td>' + bot.currentState + '</td>' +
+                                        '<td>' + bot.lastUpdated + '</td>' +
+                                        '<td class="text-center"><button class="btn-stop" data-bot-id="' + bot.id + '">STOP</button></td>' +
+                                        '<td class="text-center"><button class="btn-start" data-bot-id="' + bot.id + '">START</button></td>' +
+                                        '</tr>';
+                                tbody.insertAdjacentHTML('beforeend', markup);
+                            });
+                        }
+                    });
+                },
+                1000
+            );
+        });
+    </script>
+}
