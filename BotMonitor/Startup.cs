@@ -1,5 +1,6 @@
 ﻿using BotMonitor.Data;
 using BotMonitor.Models;
+using BotMonitor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +31,7 @@ namespace BotMonitor
                     });
 
             services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddTransient<IAuthentication, Authentication>();
 
             services.Configure<Configuration.ApiConfiguration>(configuration);
 
@@ -43,6 +45,8 @@ namespace BotMonitor
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseStaticFiles();
 
             app.UseAuthentication();
 

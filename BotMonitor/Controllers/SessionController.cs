@@ -1,56 +1,36 @@
-﻿using BotMonitor.Configuration;
-using BotMonitor.Data;
-using BotMonitor.Models;
+﻿using BotMonitor.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BotMonitor.Controllers
 {
-    public class SessionController : ControllerBase
+    public class SessionController : Controller
     {
-        readonly BotContext context;
-        readonly IPasswordHasher<User> passwordHasher;
+        readonly IAuthentication authentication;
 
-        public SessionController(BotContext context, IPasswordHasher<User> passwordHasher, IOptions<ApiConfiguration> config) : base(config.Value.ApiKey)
+        public SessionController(IAuthentication authentication)
         {
-            this.context = context;
-            this.passwordHasher = passwordHasher;
+            this.authentication = authentication;
         }
 
         [HttpGet]   
         public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task Create(string username, string password)
+        public async Task<IActionResult> Create(string username, string password)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var userId = await authentication.AuthenticateUser(username, password);
 
-            if (user == null)
-                throw new AuthenticationException("Account not found.");
+            await SignInAsync(HttpContext, userId);
 
-            var verificationResult = passwordHasher.VerifyHashedPassword(user, user.HashedPassword, password);
-
-            switch (verificationResult)
-            {
-                case PasswordVerificationResult.SuccessRehashNeeded:
-                    user.HashedPassword = passwordHasher.HashPassword(user, password);
-                    await context.SaveChangesAsync();
-                    break;
-                case PasswordVerificationResult.Failed:
-                    throw new AuthenticationException("Invalid password.");
-            }
-
-            await SignInAsync(HttpContext, user.Id);
+            return RedirectToAction("Index", "Bot");
         }
 
-        [HttpDelete]
+        // this should be HttpDestroy
+        [HttpGet]
         public async Task<IActionResult> Destroy()
         {
             await SignOutAsync(HttpContext);

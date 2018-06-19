@@ -22,9 +22,19 @@ namespace BotMonitor.Migrations
 
             modelBuilder.Entity("BotMonitor.Models.Bot", b =>
                 {
-                    b.Property<byte>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AccountPassword")
+                        .IsRequired()
+                        .HasMaxLength(32);
+
+                    b.Property<string>("AccountUsername")
+                        .IsRequired()
+                        .HasMaxLength(32);
 
                     b.Property<string>("CurrentState")
+                        .IsRequired()
                         .HasMaxLength(32);
 
                     b.Property<DateTime>("LastUpdated");
@@ -32,22 +42,31 @@ namespace BotMonitor.Migrations
                     b.Property<byte>("Level");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(16);
 
-                    b.Property<byte>("UserId");
+                    b.Property<string>("RealmName")
+                        .IsRequired()
+                        .HasMaxLength(32);
+
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Name", "RealmName")
+                        .IsUnique();
 
                     b.ToTable("Bots");
                 });
 
             modelBuilder.Entity("BotMonitor.Models.Instruction", b =>
                 {
-                    b.Property<byte>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<byte>("BotId");
+                    b.Property<int>("BotId");
 
                     b.Property<string>("Command");
 
@@ -61,7 +80,8 @@ namespace BotMonitor.Migrations
 
             modelBuilder.Entity("BotMonitor.Models.User", b =>
                 {
-                    b.Property<byte>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Email")
                         .IsRequired()

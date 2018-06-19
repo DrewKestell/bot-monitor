@@ -4,7 +4,7 @@ namespace BotMonitor.Models
 {
     public class User
     {
-        public byte Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(32)]

@@ -19,7 +19,7 @@ namespace BotMonitor.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Instruction>()
-                .HasIndex(b => b.BotId)
+                .HasIndex(i =>i.BotId)
                 .IsUnique();
 
             modelBuilder.Entity<User>()
@@ -28,6 +28,10 @@ namespace BotMonitor.Data
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Bot>()
+                .HasIndex(b => new { b.Name, b.RealmName })
                 .IsUnique();
         }
     }

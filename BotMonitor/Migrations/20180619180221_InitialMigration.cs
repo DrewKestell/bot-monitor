@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
 namespace BotMonitor.Migrations
@@ -11,7 +12,8 @@ namespace BotMonitor.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Email = table.Column<string>(maxLength: 32, nullable: false),
                     HashedPassword = table.Column<string>(maxLength: 128, nullable: false),
                     ProfilePrivate = table.Column<bool>(nullable: false),
@@ -26,12 +28,16 @@ namespace BotMonitor.Migrations
                 name: "Bots",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(nullable: false),
-                    CurrentState = table.Column<string>(maxLength: 32, nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AccountPassword = table.Column<string>(maxLength: 32, nullable: false),
+                    AccountUsername = table.Column<string>(maxLength: 32, nullable: false),
+                    CurrentState = table.Column<string>(maxLength: 32, nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     Level = table.Column<byte>(nullable: false),
-                    Name = table.Column<string>(maxLength: 16, nullable: true),
-                    UserId = table.Column<byte>(nullable: false)
+                    Name = table.Column<string>(maxLength: 16, nullable: false),
+                    RealmName = table.Column<string>(maxLength: 32, nullable: false),
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,8 +54,9 @@ namespace BotMonitor.Migrations
                 name: "Instructions",
                 columns: table => new
                 {
-                    Id = table.Column<byte>(nullable: false),
-                    BotId = table.Column<byte>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BotId = table.Column<int>(nullable: false),
                     Command = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -67,6 +74,12 @@ namespace BotMonitor.Migrations
                 name: "IX_Bots_UserId",
                 table: "Bots",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bots_Name_RealmName",
+                table: "Bots",
+                columns: new[] { "Name", "RealmName" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instructions_BotId",

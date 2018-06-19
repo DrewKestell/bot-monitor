@@ -1,8 +1,8 @@
 ﻿namespace BotMonitor.ViewModels
 {
-    public class Bot
+    public class BotViewModel
     {
-        public Bot(Models.Bot bot)
+        public BotViewModel(Models.Bot bot)
         {
             Id = bot.Id;
             Name = bot.Name;
@@ -11,7 +11,7 @@
             LastUpdated = $"{bot.LastUpdated:M/d/yyyy H:mm:ss tt}";
         }
 
-        public byte Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 

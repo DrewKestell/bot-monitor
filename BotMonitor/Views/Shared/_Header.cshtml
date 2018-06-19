@@ -1,0 +1,18 @@
+﻿@{
+    var path = Context.Request.Path.ToString();
+    var foo = path == "/";
+}
+
+<div id="header" class="p-l-xl p-r-xl">
+    <a class="@(path == "/" ? "active" : "")" href="/">Home</a>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <a class="@(path.Contains("/User/Create") ? "active" : "")" href="/User/Create">Sign Up</a>
+        <a class="@(path.Contains("/Session/Create") ? "active" : "")" href="/Session/Create">Log In</a>
+    }
+    else
+    {
+        <a class="@(path.Contains("/Bot") ? "active" : "")" href="/Bot">Bots</a>
+        <a href="/Session/Destroy">Log Out</a>
+    }
+</div>

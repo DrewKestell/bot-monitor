@@ -1,0 +1,162 @@
+﻿html {
+    font-family: 'Open Sans';
+    font-size: 14px;
+}
+
+h1 {
+    margin: 0;
+}
+
+ul {
+    padding-left: 14px;
+    margin: 0;
+}
+
+li:not(:last-child) {
+    padding-bottom: 4px;
+}
+
+input {
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+/* UTILITIES */
+
+.m-t-md {
+    margin-top: 12px;
+}
+
+.m-t-xl {
+    margin-top: 20px;
+}
+
+.m-b-md {
+    margin-bottom: 12px;
+}
+
+.m-b-xl {
+    margin-bottom: 20px;
+}
+
+.p-xl {
+    padding: 20px;
+}
+
+.p-l-xl {
+    padding-left: 20px;
+}
+
+.p-r-xl {
+    padding-right: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.color-white {
+    color: #ffffff;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+/* COMPONENTS */
+
+#header {
+    height: 60px;
+    background-color: #50a9e5;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+#header a {
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+#header a, #header a:visited, #header a:hover, #header a:active {
+    color: #eee;
+    text-decoration: none;
+}
+
+#header a.active, #header a.active:visited, #header a.active:hover, #header a.active:active {
+    color: #fff;
+    font-weight: bold;
+}
+
+#header a:not(last-of-type) {
+    padding-right: 30px;
+}
+
+.panel {
+    border: 1px solid #eeeeee;
+    width: 400px;
+}
+
+.form .form-group {
+    width: 100%;
+}
+
+.form-group:not(:last-of-type) {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    display: block;
+    width: 100%;
+}
+
+.btn {
+    text-decoration: none;
+    display: inline-block;
+    padding: 6px 12px;
+    border: none;
+    background-color: #aaa;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.background-blue {
+    background-color: #51a9e5;
+}
+
+.btn:focus {
+    outline: 0;
+}
+
+.btn-primary {
+    background-color: #51a9e5;
+}
+
+/* TABLES */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    padding: .75rem;
+    text-align: left;
+    border-bottom: 2px solid gray;
+}
+
+td {
+    padding: .75rem;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+tr:last-of-type td {
+    border-bottom: none;
+}
