@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using BotMonitor.Data;
+using BotMonitor.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,15 +20,31 @@ namespace BotMonitor
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddAuthentication("BloogBotAuthenticationScheme")
+                .AddCookie(
+                    "BloogBotAuthenticationScheme",
+                    options =>
+                    {
+                        options.AccessDeniedPath = "/Home/AccessDenied/";
+                        options.LoginPath = "/Session/Create/";
+                    });
+
+            services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.Configure<Configuration.ApiConfiguration>(configuration);
+
+            services.AddMvc();
+
+            services.AddDbContext<BotContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseAuthentication();
 
             app.UseMvcWithDefaultRoute();
         }

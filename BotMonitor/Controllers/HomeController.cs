@@ -1,43 +1,47 @@
-﻿using System.Linq;
+﻿using BotMonitor.Configuration;
 using BotMonitor.Data;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using BotMonitor.FormObjects;
 using BotMonitor.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using BotMonitor.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BotMonitor.Controllers
 {
     public class HomeController : ControllerBase
     {
-        public HomeController(IOptions<ApiConfiguration> config) : base(config.Value.ApiKey) { }
+        readonly BotContext context;
+
+        public HomeController(BotContext context, IOptions<ApiConfiguration> config)
+            : base(config.Value.ApiKey)
+        {
+            this.context = context;
+        }
 
         public IActionResult Index() => View();
 
         [HttpPost]
         public async Task IssueInstruction(byte botId, string command)
         {
-            using (var db = new BotContext())
+            var instruction = await context.Instructions.FirstOrDefaultAsync(i => i.BotId == botId);
+
+            if (instruction == null)
             {
-                var instruction = await db.Instructions.FirstOrDefaultAsync(i => i.BotId == botId);
-
-                if (instruction == null)
+                instruction = new Instruction
                 {
-                    instruction = new Instruction
-                    {
-                        BotId = botId
-                    };
-                    await db.Instructions.AddAsync(instruction);
-                }
-
-                instruction.Command = command;
-                await db.SaveChangesAsync();
+                    BotId = botId
+                };
+                await context.Instructions.AddAsync(instruction);
             }
+
+            instruction.Command = command;
+            await context.SaveChangesAsync();
         }
 
         [HttpPost]
-        public async Task UpdateBotStatus()
+        public async Task UpdateBotStatus(BotUpdate formObject)
         {
 
         }
@@ -45,11 +49,11 @@ namespace BotMonitor.Controllers
         [HttpGet]
         public async Task<JsonResult> GetData()
         {
-            using (var db = new BotContext())
-            {
-                var bots = await db.Bots.ToListAsync();
-                return Json(bots.Select(b => new ViewModels.Bot(b)));
-            }
+            var bots = await context.Bots.ToListAsync();
+            return Json(bots.Select(b => new ViewModels.Bot(b)));
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied() => View();
     }
 }

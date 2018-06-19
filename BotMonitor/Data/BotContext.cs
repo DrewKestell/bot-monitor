@@ -9,15 +9,25 @@ namespace BotMonitor.Data
 
         public DbSet<Instruction> Instructions { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public DbSet<User> Users { get; set; }
+
+        public BotContext(DbContextOptions options)
+            : base(options)
         {
-            optionsBuilder.UseSqlite("Data Source=C:\\SQLite\\BloogBot.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Instruction>()
                 .HasIndex(b => b.BotId)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
                 .IsUnique();
         }
     }

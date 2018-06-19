@@ -7,7 +7,7 @@ namespace BotMonitor.Controllers
     public class ControllerBase : Controller
     {
         readonly string apiKey;
-
+        
         public ControllerBase(string apiKey)
         {
             this.apiKey = apiKey;
