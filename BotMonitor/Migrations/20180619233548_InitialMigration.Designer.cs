@@ -11,7 +11,7 @@ using System;
 namespace BotMonitor.Migrations
 {
     [DbContext(typeof(BotContext))]
-    [Migration("20180619180221_InitialMigration")]
+    [Migration("20180619233548_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,10 @@ namespace BotMonitor.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AI")
+                        .IsRequired()
+                        .HasMaxLength(32);
+
                     b.Property<string>("AccountPassword")
                         .IsRequired()
                         .HasMaxLength(32);
@@ -34,13 +38,32 @@ namespace BotMonitor.Migrations
                         .IsRequired()
                         .HasMaxLength(32);
 
+                    b.Property<string>("Ammo")
+                        .HasMaxLength(32);
+
                     b.Property<string>("CurrentState")
                         .IsRequired()
+                        .HasMaxLength(32);
+
+                    b.Property<string>("Drink")
+                        .HasMaxLength(32);
+
+                    b.Property<string>("ExcludedMobs")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("Food")
+                        .HasMaxLength(32);
+
+                    b.Property<string>("HotSpot")
                         .HasMaxLength(32);
 
                     b.Property<DateTime>("LastUpdated");
 
                     b.Property<byte>("Level");
+
+                    b.Property<byte>("MaxLevel");
+
+                    b.Property<byte>("MinLevel");
 
                     b.Property<string>("Name")
                         .IsRequired()

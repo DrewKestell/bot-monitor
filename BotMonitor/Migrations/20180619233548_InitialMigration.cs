@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
+using System.Collections.Generic;
 
 namespace BotMonitor.Migrations
 {
@@ -30,11 +31,19 @@ namespace BotMonitor.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AI = table.Column<string>(maxLength: 32, nullable: false),
                     AccountPassword = table.Column<string>(maxLength: 32, nullable: false),
                     AccountUsername = table.Column<string>(maxLength: 32, nullable: false),
+                    Ammo = table.Column<string>(maxLength: 32, nullable: true),
                     CurrentState = table.Column<string>(maxLength: 32, nullable: false),
+                    Drink = table.Column<string>(maxLength: 32, nullable: true),
+                    ExcludedMobs = table.Column<string>(maxLength: 128, nullable: true),
+                    Food = table.Column<string>(maxLength: 32, nullable: true),
+                    HotSpot = table.Column<string>(maxLength: 64, nullable: true),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     Level = table.Column<byte>(nullable: false),
+                    MaxLevel = table.Column<byte>(nullable: false),
+                    MinLevel = table.Column<byte>(nullable: false),
                     Name = table.Column<string>(maxLength: 16, nullable: false),
                     RealmName = table.Column<string>(maxLength: 32, nullable: false),
                     UserId = table.Column<int>(nullable: false)

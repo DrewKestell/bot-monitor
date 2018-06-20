@@ -42,6 +42,34 @@ namespace BotMonitor.Controllers
             return Json(bots.Select(b => new BotViewModel(b)));
         }
 
+        [HttpGet]
+        public async Task<JsonResult> ListCredentials(string username, string password, string realmName)
+        {
+            var userId = await authentication.AuthenticateUser(username, password);
+
+            var bots = await context.Bots
+                .Where(b => b.RealmName == realmName)
+                .Where(b => b.UserId == userId)
+                .ToListAsync();
+
+            return Json(bots.Select(b => new BotCredentialsViewModel(b)));
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> Show(string username, string password, string realmName, string name)
+        {
+            var userId = await authentication.AuthenticateUser(username, password);
+
+            var bot = await context.Bots.FirstOrDefaultAsync(b =>
+                b.Name == name && b.RealmName == realmName
+            );
+
+            if (bot == null)
+                throw new Exception("Bot not found. Add the bot to Bot Monitor before playing.");
+
+            return Json(new BotDetailViewModel(bot));
+        }
+
         [Authorize]
         [HttpGet]
         public IActionResult Create() => View();
@@ -67,9 +95,10 @@ namespace BotMonitor.Controllers
                 UserId = userId,
                 Name = formObject.Name,
                 RealmName = formObject.RealmName,
-                CurrentState = "Fresh",
                 AccountUsername = formObject.AccountUsername,
                 AccountPassword = formObject.AccountPassword,
+                AI = formObject.AI,
+                CurrentState = "Fresh",
                 Level = 1,
                 LastUpdated = DateTime.Now
             });
@@ -81,9 +110,6 @@ namespace BotMonitor.Controllers
         [HttpPost]
         public async Task Update(Update formObject)
         {
-            if (!formObject.IsValid)
-                throw new Exception("Request was not valid.");
-
             var userID = await authentication.AuthenticateUser(formObject.Username, formObject.Password);
 
             var bot = await context.Bots.FirstOrDefaultAsync(b => 
@@ -96,6 +122,29 @@ namespace BotMonitor.Controllers
             bot.CurrentState = formObject.CurrentState;
             bot.Level = formObject.Level;
             bot.LastUpdated = DateTime.Now;
+            await context.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        public async Task UpdateSettings(UpdateSettings formObject)
+        {
+            var userID = await authentication.AuthenticateUser(formObject.Username, formObject.Password);
+
+            var bot = await context.Bots.FirstOrDefaultAsync(b =>
+                b.Name == formObject.Name && b.RealmName == formObject.RealmName
+            );
+
+            if (bot == null)
+                throw new Exception("Bot not found. Add the bot to Bot Monitor before playing.");
+
+            bot.AI = formObject.AI;
+            bot.HotSpot = formObject.HotSpot;
+            bot.Food = formObject.Food;
+            bot.Drink = formObject.Drink;
+            bot.Ammo = formObject.Ammo;
+            bot.ExcludedMobs = formObject.ExcludedMobs;
+            bot.MinLevel = formObject.MinLevel;
+            bot.MaxLevel = formObject.MaxLevel;
             await context.SaveChangesAsync();
         }
     }
