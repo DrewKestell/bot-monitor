@@ -23,6 +23,10 @@ input {
 
 /* UTILITIES */
 
+.m-xl {
+    margin: 20px;
+}
+
 .m-t-md {
     margin-top: 12px;
 }
@@ -64,6 +68,97 @@ input {
 }
 
 /* COMPONENTS */
+
+#bot-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.bot-card {
+    margin: 10px;
+    border: 1px solid #d6d6d6;
+}
+
+.bot-card-header {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    background-color: #505050;
+    color: white;
+    justify-content: space-between;
+    border-bottom: 1px solid #bdbdbd;
+}
+
+
+.bot-card-body {
+    padding: 5px;
+}
+
+.bot-card-body.inactive {
+    background-color: #f5f5f5;
+}
+
+.bot-card-body.active {
+    background-color: #e5f3ff;
+}
+
+.bot-name {
+    padding: 2px 0;
+    font-size: 1.4rem;
+}
+
+.bot-realm-name {
+    padding: 4px 0 0 2px;
+    text-transform: uppercase;
+    font-size: 80%;
+}
+
+.bot-class-icon {
+    position: relative;
+}
+
+.bot-class-icon img {
+    width: 50px;
+    height: 50px;
+}
+
+.bot-level {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    font-size: 80%;
+    text-align: center;
+    line-height: 20px;
+    border: 1px solid black;
+}
+
+.bot-current-zone {
+    padding: 4px 0;
+}
+
+.bot-current-state {
+    padding: 4px 0;
+}
+
+.bot-last-updated {
+    padding: 4px 0;
+}
+
+.bot-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 20px;
+}
+
+.bot-controls button {
+    margin: 5px;
+    background-color: #ff9456;
+}
 
 #header {
     height: 60px;
@@ -159,4 +254,36 @@ td {
 
 tr:last-of-type td {
     border-bottom: none;
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width: 1800px) {
+    #bot-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 1400px) {
+    #bot-container {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    #bot-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    #bot-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 440px) {
+    .panel {
+        width: 100%;
+    }
 }

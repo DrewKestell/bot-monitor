@@ -32,6 +32,10 @@ namespace BotMonitor.Models
         [Required]
         [MaxLength(32)]
         public string AI { get; set; }
+
+        [Required]
+        [MaxLength(16)]
+        public string Class { get; set; }
         
         // post these with every update
 
@@ -39,7 +43,11 @@ namespace BotMonitor.Models
         [MaxLength(32)]
         public string CurrentState { get; set; }
 
+        [Required]
         [MaxLength(32)]
+        public string CurrentZone { get; set; }
+
+        [MaxLength(64)]
         public string HotSpot { get; set; }
         
         [MaxLength(32)]

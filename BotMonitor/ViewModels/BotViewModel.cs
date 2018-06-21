@@ -10,6 +10,8 @@ namespace BotMonitor.ViewModels
             Name = bot.Name;
             RealmName = bot.RealmName;
             CurrentState = bot.CurrentState;
+            CurrentZone = bot.CurrentZone;
+            Class = bot.Class;
             Level = bot.Level;
             LastUpdated = $"{bot.LastUpdated:M/d/yyyy H:mm:ss tt}";
         }
@@ -21,6 +23,10 @@ namespace BotMonitor.ViewModels
         public string RealmName { get; set; }
         
         public string CurrentState { get; set; }
+
+        public string CurrentZone { get; set; }
+
+        public string Class { get; set; }
 
         public byte Level { get; set; }
 

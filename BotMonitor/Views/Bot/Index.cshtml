@@ -7,7 +7,7 @@
 <a class="m-t-xl btn background-blue" href="/Bot/Create">Create Bot</a>
 
 <div class="p-xl">
-    <table>
+    @*<table>
         <thead>
         <tr>
             <th>Name</th>
@@ -24,7 +24,10 @@
             <td colspan="6">LOADING...</td>
         </tr>
         </tbody>
-    </table>
+    </table>*@
+    <div id="bot-container">
+
+    </div>
 </div>
 
 @section Scripts {
@@ -51,39 +54,79 @@
 
         //});
 
-            setInterval(
-                function() {
-                    var xhr = new XMLHttpRequest();
-                    xhr.responseType = 'json';
-                    xhr.open('GET', '/Bot/List');
-                    xhr.onload = function () {
-                        if (xhr.status === 200) {
-                            var tbody = document.getElementById("bot-table");
-                            while (tbody.firstChild) {
-                                tbody.removeChild(tbody.firstChild);
-                            }
-                            xhr.response.forEach(function (bot) {
-                                var markup =
-                                    '<tr>' +
-                                        '<td>' + bot.name + '</td>' +
-                                        '<td>' + bot.realmName + '</td>' +
-                                        '<td class="text-center">' + bot.level + '</td>' +
-                                        '<td>' + bot.currentState + '</td>' +
-                                        '<td>' + bot.lastUpdated + '</td>' +
-                                        '<td class="text-center"><button class="btn" data-bot-id="' + bot.id + '">STOP</button></td>' +
-                                        '<td class="text-center"><button class="btn" data-bot-id="' + bot.id + '">START</button></td>' +
-                                        '</tr>';
-                                tbody.insertAdjacentHTML('beforeend', markup);
-                            });
-                        }
-                        else {
-                            console.log('Request failed.  Returned status of ' + xhr.status);
-                        }
-                    };
-                    xhr.send();
-                },
-                1000
+        function buildCard(bot) {
+            return (
+                '<div class="bot-card">' +
+                '<div class="bot-card-header">' +
+                '<div><div class="bot-name">' + bot.name + '</div><div class="bot-realm-name">' + bot.realmName + '</div></div>' +
+                '<div class="bot-class-icon"><img src="/img/class-icons/' + bot.class.toLowerCase() + '.png"><span class="bot-level">' + bot.level + '</span></div>' +
+                '</div>' +
+                buildCardBody(bot.currentState) +
+                '<table>' +
+                '<tbody>' +
+                '<tr>' +
+                '<td>Current Zone</td>' +
+                '<td>' + bot.currentZone + '</td>' +
+                '</tr>' +
+                '<td>Current State</td>' +
+                '<td>' + bot.currentState + '</td>' +
+                '</tr>' +
+                '<td>Last Updated</td>' +
+                '<td>' + bot.lastUpdated + '</td>' +
+                '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '<div class="bot-controls">' +
+                '<button class="btn">Start</button>' +
+                '<button class="btn">Stop</button>' +
+                '<button class="btn">Log Out</button>' +
+                '<button class="btn">Blacklist Target</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
             );
+        }
+
+        function buildCardBody(currentState) {
+            if (currentState === 'Idle')
+                return '<div class="bot-card-body inactive">';
+            else
+                return '<div class="bot-card-body active">';
+        }
+
+        function getBots() {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'json';
+            xhr.open('GET', '/Bot/List');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var container = document.getElementById("bot-container");
+                    while (container.firstChild) {
+                        container.removeChild(container.firstChild);
+                    }
+                    xhr.response.forEach(function (bot) {
+                        //var markup =
+                        //    '<tr>' +
+                        //        '<td>' + bot.name + '</td>' +
+                        //        '<td>' + bot.realmName + '</td>' +
+                        //        '<td class="text-center">' + bot.level + '</td>' +
+                        //        '<td>' + bot.currentState + '</td>' +
+                        //        '<td>' + bot.lastUpdated + '</td>' +
+                        //        '<td class="text-center"><button class="btn" data-bot-id="' + bot.id + '">STOP</button></td>' +
+                        //        '<td class="text-center"><button class="btn" data-bot-id="' + bot.id + '">START</button></td>' +
+                        //        '</tr>';
+                        container.insertAdjacentHTML('beforeend', buildCard(bot));
+                    });
+                }
+                else {
+                    console.log('Request failed.  Returned status of ' + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+
+        getBots();
+        //setInterval(getBots, 1000);
         
     </script>
 }

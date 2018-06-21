@@ -11,9 +11,10 @@ using System;
 namespace BotMonitor.Migrations
 {
     [DbContext(typeof(BotContext))]
-    partial class BotContextModelSnapshot : ModelSnapshot
+    [Migration("20180621214717_AddCurrentZoneToBot")]
+    partial class AddCurrentZoneToBot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,10 +40,6 @@ namespace BotMonitor.Migrations
 
                     b.Property<string>("Ammo")
                         .HasMaxLength(32);
-
-                    b.Property<string>("Class")
-                        .IsRequired()
-                        .HasMaxLength(16);
 
                     b.Property<string>("CurrentState")
                         .IsRequired()
