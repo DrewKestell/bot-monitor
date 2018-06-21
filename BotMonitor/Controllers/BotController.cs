@@ -37,6 +37,7 @@ namespace BotMonitor.Controllers
             
             var bots = await context.Bots
                 .Where(b => b.UserId == userId)
+                .OrderByDescending(b => b.LastUpdated)
                 .ToListAsync();
 
             return Json(bots.Select(b => new BotViewModel(b)));
@@ -50,9 +51,10 @@ namespace BotMonitor.Controllers
             var bots = await context.Bots
                 .Where(b => b.RealmName == realmName)
                 .Where(b => b.UserId == userId)
+                .OrderBy(b => b.Name)
                 .ToListAsync();
 
-            return Json(bots.Select(b => new BotCredentialsViewModel(b)));
+            return Json(bots.Select(b => new BotDetailViewModel(b)));
         }
 
         [HttpGet]

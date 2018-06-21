@@ -6,6 +6,7 @@ namespace BotMonitor.ViewModels
     {
         public BotDetailViewModel(Bot bot)
         {
+            CharacterName = bot.Name;
             AccountUsername = bot.AccountUsername;
             AccountPassword = bot.AccountPassword;
             AI = bot.AI;
@@ -16,7 +17,10 @@ namespace BotMonitor.ViewModels
             ExcludedMobs = bot.ExcludedMobs;
             MinLevel = bot.MinLevel;
             MaxLevel = bot.MaxLevel;
+            Level = bot.Level;
         }
+
+        public string CharacterName { get; set; }
 
         public string AccountUsername { get; set; }
 
@@ -37,5 +41,7 @@ namespace BotMonitor.ViewModels
         public byte MinLevel { get; set; }
 
         public byte MaxLevel { get; set; }
+
+        public byte Level { get; set; }
     }
 }
