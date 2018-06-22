@@ -4,9 +4,20 @@
 
 <h1>Bot Index</h1>
 
-<a class="m-t-xl btn background-blue" href="/Bot/Create">Create Bot</a>
+<div class="flex-space-between">
+    <a class="m-t-xl btn background-blue" href="/Bot/Create">Create Bot</a>
 
-<select></select>
+    <div>
+        <label class="p-b-xs display-block">Sort Order</label>
+        <select id="order-bots-filter">
+            <option value="Last Updated">Last Updated</option>
+            <option value="Name">Name</option>
+            <option value="Realm Name">Realm Name</option>
+            <option value="Active">Active</option>
+        </select>
+    </div>
+</div>
+
 
 <div class="p-xl">
     <div id="bot-container">
@@ -44,7 +55,7 @@
                 '<div><div class="bot-name">' + bot.name + '</div><div class="bot-realm-name">' + bot.realmName + '</div></div>' +
                 '<div class="bot-class-icon"><img src="/img/class-icons/' + bot.class.toLowerCase() + '.png"><span class="bot-level">' + bot.level + '</span></div>' +
                 '</div>' +
-                buildCardBody(bot.currentState) +
+                buildCardBody(bot.currentZone, bot.currentState) +
                 '<table>' +
                 '<tbody>' +
                 '<tr>' +
@@ -70,17 +81,20 @@
             );
         }
 
-        function buildCardBody(currentState) {
-            if (currentState === 'Idle')
+        function buildCardBody(currentZone, currentState) {
+            if (currentZone === 'GM Island')
+                return '<div class="bot-card-body danger">';
+            else if (currentState === 'Idle')
                 return '<div class="bot-card-body inactive">';
             else
                 return '<div class="bot-card-body active">';
         }
 
         function getBots() {
+            var sortOrder = document.getElementById('order-bots-filter').value;
             var xhr = new XMLHttpRequest();
             xhr.responseType = 'json';
-            xhr.open('GET', '/Bot/List');
+            xhr.open('GET', '/Bot/List?sortOrder=' + sortOrder);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var container = document.getElementById("bot-container");

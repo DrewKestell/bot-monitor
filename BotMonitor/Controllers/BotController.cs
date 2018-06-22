@@ -1,11 +1,14 @@
-﻿using BotMonitor.Data;
+﻿using BotMonitor.Configuration;
+using BotMonitor.Data;
 using BotMonitor.FormObjects.Bot;
 using BotMonitor.Models;
 using BotMonitor.Services;
 using BotMonitor.ViewModels;
+using DSharpPlus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,13 +19,16 @@ namespace BotMonitor.Controllers
     {
         readonly IAuthentication authentication;
         readonly BotContext context;
+        readonly ApiConfiguration config;
 
         public BotController(
             IAuthentication authentication,
-            BotContext context)
+            BotContext context,
+            IOptions<ApiConfiguration> config)
         {
             this.authentication = authentication;
             this.context = context;
+            this.config = config.Value;
         }
 
         [Authorize]
@@ -44,13 +50,13 @@ namespace BotMonitor.Controllers
                     bots = bots.OrderBy(b => b.Name);
                     break;
                 case "Realm Name":
-                    bots = bots.OrderByDescending(b => b.RealmName).ThenBy(b => b.Name).ThenBy(b => b.Level);
+                    bots = bots.OrderBy(b => b.RealmName).ThenBy(b => b.Name).ThenBy(b => b.Level);
                     break;
                 case "Active":
-                    bots = bots.Where(b => b.CurrentState != "Idle").Concat(bots.Where(b => b.CurrentState == "Idle")).OrderByDescending(b => b.RealmName).ThenBy(b => b.Name).ThenBy(b => b.Level);
+                    bots = bots.OrderBy(b => b.CurrentState != "Idle" ? 1 : 2);
                     break;
                 default:
-                    bots = bots.OrderByDescending(b => b.LastUpdated);
+                    bots = bots.OrderByDescending(b => DateTime.Parse(b.LastUpdated.ToString("g"))).ThenBy(b => b.RealmName).ThenBy(b => b.Name).ThenBy(b => b.Level);
                     break;
             }
             
@@ -137,6 +143,9 @@ namespace BotMonitor.Controllers
             if (bot == null)
                 throw new Exception("Bot not found. Add the bot to Bot Monitor before playing.");
 
+            if (formObject.Level > bot.Level)
+                await DispatchDiscordMessage($"{bot.Name} the {bot.Class} just reached level {formObject.Level}!");
+
             bot.CurrentState = formObject.CurrentState;
             bot.Level = formObject.Level;
             bot.LastUpdated = DateTime.Now;
@@ -166,6 +175,19 @@ namespace BotMonitor.Controllers
             bot.MinLevel = formObject.MinLevel;
             bot.MaxLevel = formObject.MaxLevel;
             await context.SaveChangesAsync();
+        }
+
+        [NonAction]
+        public async Task DispatchDiscordMessage(string message)
+        {
+            var client = new DiscordClient(new DiscordConfiguration
+            {
+                Token = config.BotToken,
+                TokenType = TokenType.Bot
+            });
+            await client.ConnectAsync();
+            var channel = await client.GetChannelAsync(config.ChannelId);
+            await channel.SendMessageAsync(message);
         }
     }
 }

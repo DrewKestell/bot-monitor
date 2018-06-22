@@ -13,7 +13,7 @@ namespace BotMonitor.ViewModels
             CurrentZone = bot.CurrentZone;
             Class = bot.Class;
             Level = bot.Level;
-            LastUpdated = $"{bot.LastUpdated:M/d/yyyy H:mm:ss tt}";
+            LastUpdated = $"{bot.LastUpdated:g}";
         }
 
         public int Id { get; set; }
