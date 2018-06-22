@@ -36,7 +36,8 @@ li {
   }
 }
 
-input {
+input,
+textarea {
   box-sizing: border-box;
   padding: 4px;
 }
@@ -207,6 +208,28 @@ select {
   }
 }
 
+.chat {
+  margin: 12px 6px 6px 6px;
+
+  .chat-history {
+    background-color: $color-white;
+    height: 200px;
+    margin-bottom: 10px;
+    word-break: break-all;
+    overflow: auto;
+    padding: 8px;
+    box-shadow: 0 0 1px $color-gray;
+  }
+
+  input {
+    width: 80%;
+  }
+
+  button {
+    width: 20%;
+  }
+}
+
 .header {
   align-items: center;
   background-color: $color-blue;
@@ -284,6 +307,10 @@ form {
 
 .btn-primary {
   background-color: $color-blue;
+}
+
+.btn-gray {
+  background-color: $color-gray;
 }
 
 .error {

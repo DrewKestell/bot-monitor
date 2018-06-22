@@ -48,6 +48,12 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <div class="chat">
+                    <div class="chat-history"></div>
+                    <input type="text" /><button class="btn btn-gray">Send</button>
+                </div>
+
                 <div class="bot-controls">
                     <button class="btn" v-on:click="issueInstruction(bot.id, 'start')">Start</button>
                     <button class="btn" v-on:click="issueInstruction(bot.id, 'stop')">Stop</button>

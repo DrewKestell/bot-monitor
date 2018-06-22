@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 
-namespace BotMonitor.Services
+namespace BotMonitor.Concerns
 {
     public class Authentication : IAuthentication
     {

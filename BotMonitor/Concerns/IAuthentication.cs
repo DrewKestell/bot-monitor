@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BotMonitor.Services
+namespace BotMonitor.Concerns
 {
     public interface IAuthentication
     {
