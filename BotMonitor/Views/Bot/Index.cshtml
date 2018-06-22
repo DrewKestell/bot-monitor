@@ -5,7 +5,7 @@
 <h1>Bot Index</h1>
 
 <div class="flex-space-between">
-    <a class="m-t-xl btn background-blue" href="/Bot/Create">Create Bot</a>
+    <a class="m-t-xl btn btn-primary" href="/Bot/Create">Create Bot</a>
 
     <div>
         <label class="p-b-xs text-bold display-block">Sort Order</label>
@@ -19,7 +19,7 @@
 </div>
 
 <div class="m-t-xxl">
-    <div id="bot-container">
+    <div id="bot-container" class="bot-container">
         <div class="bot-card" v-for="bot in bots">
             <div class="bot-card-header">
                 <div>
@@ -75,20 +75,18 @@
             },
             methods: {
                 issueInstruction: function (id, command) {
-                    // TODO: wire these up with Bloog Bot
-
-                    //var xhr = new XMLHttpRequest();
-                    //xhr.responseType = 'json';
-                    //xhr.open('POST', '/Instruction/IssueInstruction?botId=' + id + '&command=' + command);
-                    //xhr.onload = function () {
-                    //    if (xhr.status === 200) {
-                    //        // TODO: handle success
-                    //    }
-                    //    else {
-                    //        // TODO: handle instruction error
-                    //    }
-                    //};
-                    //xhr.send();
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'json';
+                    xhr.open('POST', '/Instruction/IssueInstruction?botId=' + id + '&command=' + command);
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            // TODO: handle success
+                        }
+                        else {
+                            // TODO: handle instruction error
+                        }
+                    };
+                    xhr.send();
                 }
             }
         })

@@ -3,7 +3,7 @@
     var foo = path == "/";
 }
 
-<div id="header" class="p-l-xl p-r-xl">
+<div class="p-l-xl p-r-xl header">
     <a class="@(path == "/" ? "active" : "")" href="/">Home</a>
     @if (!User.Identity.IsAuthenticated)
     {
