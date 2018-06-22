@@ -8,7 +8,7 @@
     <a class="m-t-xl btn background-blue" href="/Bot/Create">Create Bot</a>
 
     <div>
-        <label class="p-b-xs display-block">Sort Order</label>
+        <label class="p-b-xs text-bold display-block">Sort Order</label>
         <select id="order-bots-filter">
             <option value="Last Updated">Last Updated</option>
             <option value="Name">Name</option>
@@ -18,77 +18,80 @@
     </div>
 </div>
 
-
-<div class="p-xl">
+<div class="m-t-xxl">
     <div id="bot-container">
+        <div class="bot-card" v-for="bot in bots">
+            <div class="bot-card-header">
+                <div>
+                    <div class="bot-name">{{ bot.name }}</div>
+                    <div class="bot-realm-name">{{ bot.realmName }}</div>
+                </div>
+                <div class="bot-class-icon">
+                    <img v-bind:src="'/img/class-icons/' + bot.class.toLowerCase() + '.png'">
+                    <span class="bot-level">{{ bot.level }}</span>
+                </div>
+            </div>
+            <div class="bot-card-body" v-bind:class="{ danger: bot.currentZone === 'GM Island', inactive: bot.currentState === 'Idle', active: bot.currentZone !== 'GM Island' && bot.currentState !== 'Idle' }">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Current Zone</td>
+                            <td>{{ bot.currentZone }}</td>
+                        </tr>
+                        <tr>
+                            <td>Current State</td>
+                            <td>{{ bot.currentState }}</td>
+                        </tr>
+                        <tr>
+                            <td>Last Updated</td>
+                            <td>{{ bot.lastUpdated }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="bot-controls">
+                    <button class="btn" v-on:click="issueInstruction(bot.id, 'start')">Start</button>
+                    <button class="btn" v-on:click="issueInstruction(bot.id, 'stop')">Stop</button>
+                    <button class="btn" v-on:click="issueInstruction(bot.id, 'log-out')">Log Out</button>
+                    <button class="btn" v-on:click="issueInstruction(bot.id, 'blacklist-target')">Blacklist Target</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
+    <environment include="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    </environment>
+
     <script>
-        //$(function () {
-        //    var issueInstruction = function(botId, command) {
-        //        $.ajax({
-        //            url: "/Home/IssueInstruction",
-        //            type: 'POST',
-        //            data: {
-        //                botId: botId,
-        //                command: command
-        //            }
-        //        });
-        //    }
+        var app = new Vue({
+            el: '#bot-container',
+            data: {
+                bots: []
+            },
+            methods: {
+                issueInstruction: function (id, command) {
+                    // TODO: wire these up with Bloog Bot
 
-        //    $(document).on('click', '.btn-stop', function (element) {
-        //        issueInstruction(element.target.dataset.botId, 'STOP');
-        //    });
-
-        //    $(document).on('click', '.btn-start', function (element) {
-        //        issueInstruction(element.target.dataset.botId, 'START');
-        //    });
-
-        //});
-
-        function buildCard(bot) {
-            return (
-                '<div class="bot-card">' +
-                '<div class="bot-card-header">' +
-                '<div><div class="bot-name">' + bot.name + '</div><div class="bot-realm-name">' + bot.realmName + '</div></div>' +
-                '<div class="bot-class-icon"><img src="/img/class-icons/' + bot.class.toLowerCase() + '.png"><span class="bot-level">' + bot.level + '</span></div>' +
-                '</div>' +
-                buildCardBody(bot.currentZone, bot.currentState) +
-                '<table>' +
-                '<tbody>' +
-                '<tr>' +
-                '<td>Current Zone</td>' +
-                '<td>' + bot.currentZone + '</td>' +
-                '</tr>' +
-                '<td>Current State</td>' +
-                '<td>' + bot.currentState + '</td>' +
-                '</tr>' +
-                '<td>Last Updated</td>' +
-                '<td>' + bot.lastUpdated + '</td>' +
-                '</tr>' +
-                '</tbody>' +
-                '</table>' +
-                '<div class="bot-controls">' +
-                '<button class="btn">Start</button>' +
-                '<button class="btn">Stop</button>' +
-                '<button class="btn">Log Out</button>' +
-                '<button class="btn">Blacklist Target</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>'
-            );
-        }
-
-        function buildCardBody(currentZone, currentState) {
-            if (currentZone === 'GM Island')
-                return '<div class="bot-card-body danger">';
-            else if (currentState === 'Idle')
-                return '<div class="bot-card-body inactive">';
-            else
-                return '<div class="bot-card-body active">';
-        }
+                    //var xhr = new XMLHttpRequest();
+                    //xhr.responseType = 'json';
+                    //xhr.open('POST', '/Instruction/IssueInstruction?botId=' + id + '&command=' + command);
+                    //xhr.onload = function () {
+                    //    if (xhr.status === 200) {
+                    //        // TODO: handle success
+                    //    }
+                    //    else {
+                    //        // TODO: handle instruction error
+                    //    }
+                    //};
+                    //xhr.send();
+                }
+            }
+        })
 
         function getBots() {
             var sortOrder = document.getElementById('order-bots-filter').value;
@@ -97,22 +100,15 @@
             xhr.open('GET', '/Bot/List?sortOrder=' + sortOrder);
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    var container = document.getElementById("bot-container");
-                    while (container.firstChild) {
-                        container.removeChild(container.firstChild);
-                    }
-                    xhr.response.forEach(function (bot) {
-                        container.insertAdjacentHTML('beforeend', buildCard(bot));
-                    });
+                    app.bots = xhr.response;
                 }
                 else {
-                    console.log('Request failed.  Returned status of ' + xhr.status);
+                    document.getElementById("bot-container").parentElement.innerHTML = '<div class="error">There was a problem loading bot data.</div>';
                 }
             };
             xhr.send();
         }
-        
+
         setInterval(getBots, 1000);
-        
     </script>
 }
