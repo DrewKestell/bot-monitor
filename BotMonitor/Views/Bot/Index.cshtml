@@ -6,27 +6,10 @@
 
 <a class="m-t-xl btn background-blue" href="/Bot/Create">Create Bot</a>
 
-<div class="p-xl">
-    @*<table>
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Realm</th>
-            <th class="text-center">Level</th>
-            <th>Current State</th>
-            <th>Last Updated</th>
-            <th class="text-center">Stop</th>
-            <th class="text-center">Start</th>
-        </tr>
-        </thead>
-        <tbody id="bot-table">
-        <tr>
-            <td colspan="6">LOADING...</td>
-        </tr>
-        </tbody>
-    </table>*@
-    <div id="bot-container">
+<select></select>
 
+<div class="p-xl">
+    <div id="bot-container">
     </div>
 </div>
 
@@ -105,16 +88,6 @@
                         container.removeChild(container.firstChild);
                     }
                     xhr.response.forEach(function (bot) {
-                        //var markup =
-                        //    '<tr>' +
-                        //        '<td>' + bot.name + '</td>' +
-                        //        '<td>' + bot.realmName + '</td>' +
-                        //        '<td class="text-center">' + bot.level + '</td>' +
-                        //        '<td>' + bot.currentState + '</td>' +
-                        //        '<td>' + bot.lastUpdated + '</td>' +
-                        //        '<td class="text-center"><button class="btn" data-bot-id="' + bot.id + '">STOP</button></td>' +
-                        //        '<td class="text-center"><button class="btn" data-bot-id="' + bot.id + '">START</button></td>' +
-                        //        '</tr>';
                         container.insertAdjacentHTML('beforeend', buildCard(bot));
                     });
                 }
@@ -124,9 +97,8 @@
             };
             xhr.send();
         }
-
-        getBots();
-        //setInterval(getBots, 1000);
+        
+        setInterval(getBots, 1000);
         
     </script>
 }

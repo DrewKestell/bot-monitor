@@ -31,16 +31,30 @@ namespace BotMonitor.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<JsonResult> List()
+        public async Task<JsonResult> List(string sortOrder)
         {
             var userId = int.Parse(HttpContext.User.Claims.Single(c => c.Type == "UserId").Value);
-            
-            var bots = await context.Bots
-                .Where(b => b.UserId == userId)
-                .OrderByDescending(b => b.LastUpdated)
-                .ToListAsync();
 
-            return Json(bots.Select(b => new BotViewModel(b)));
+            var bots = context.Bots
+                .Where(b => b.UserId == userId);
+
+            switch(sortOrder)
+            {
+                case "Name":
+                    bots = bots.OrderBy(b => b.Name);
+                    break;
+                case "Realm Name":
+                    bots = bots.OrderByDescending(b => b.RealmName).ThenBy(b => b.Name).ThenBy(b => b.Level);
+                    break;
+                case "Active":
+                    bots = bots.Where(b => b.CurrentState != "Idle").Concat(bots.Where(b => b.CurrentState == "Idle")).OrderByDescending(b => b.RealmName).ThenBy(b => b.Name).ThenBy(b => b.Level);
+                    break;
+                default:
+                    bots = bots.OrderByDescending(b => b.LastUpdated);
+                    break;
+            }
+            
+            return Json((await bots.ToListAsync()).Select(b => new BotViewModel(b)));
         }
 
         [HttpGet]
@@ -101,7 +115,9 @@ namespace BotMonitor.Controllers
                 AccountPassword = formObject.AccountPassword,
                 AI = formObject.AI,
                 CurrentState = "Fresh",
+                CurrentZone = "Fresh",
                 Level = 1,
+                Class = formObject.Class,
                 LastUpdated = DateTime.Now
             });
             await context.SaveChangesAsync();
@@ -124,6 +140,8 @@ namespace BotMonitor.Controllers
             bot.CurrentState = formObject.CurrentState;
             bot.Level = formObject.Level;
             bot.LastUpdated = DateTime.Now;
+            bot.CurrentZone = formObject.CurrentZone;
+            bot.Class = formObject.Class;
             await context.SaveChangesAsync();
         }
 

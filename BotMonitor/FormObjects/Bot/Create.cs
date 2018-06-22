@@ -14,11 +14,14 @@ namespace BotMonitor.FormObjects.Bot
 
         public string AI { get; set; }
 
+        public string Class { get; set; }
+
         public bool IsValid =>
             !String.IsNullOrWhiteSpace(Name) &&
             !String.IsNullOrWhiteSpace(RealmName) &&
             !String.IsNullOrWhiteSpace(AccountUsername) &&
             !String.IsNullOrWhiteSpace(AccountPassword) &&
-            !String.IsNullOrWhiteSpace(AI);
+            !String.IsNullOrWhiteSpace(AI) &&
+            !String.IsNullOrWhiteSpace(Class);
     }
 }

@@ -15,7 +15,11 @@
         public string AccountPassword { get; set; }
         
         public string CurrentState { get; set; }
-        
+
         public byte Level { get; set; }
+
+        public string CurrentZone { get; set; }
+
+        public string Class { get; set; }
     }
 }
