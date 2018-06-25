@@ -180,14 +180,14 @@ namespace BotMonitor.Controllers
         [NonAction]
         public async Task DispatchDiscordMessage(string message)
         {
-            var client = new DiscordClient(new DiscordConfiguration
-            {
-                Token = config.BotToken,
-                TokenType = TokenType.Bot
-            });
-            await client.ConnectAsync();
-            var channel = await client.GetChannelAsync(config.ChannelId);
-            await channel.SendMessageAsync(message);
+            //var client = new DiscordClient(new DiscordConfiguration
+            //{
+            //    Token = config.BotToken,
+            //    TokenType = TokenType.Bot
+            //});
+            //await client.ConnectAsync();
+            //var channel = await client.GetChannelAsync(config.ChannelId);
+            //await channel.SendMessageAsync(message);
         }
     }
 }
