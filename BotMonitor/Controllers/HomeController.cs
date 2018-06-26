@@ -4,11 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BotMonitor.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using BotMonitor.Configuration;
 
 namespace BotMonitor.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
+        public HomeController(IOptions<ApiConfiguration> config) : base(config.Value.ApiKey) { }
+
         public IActionResult Index() => View();
 
         [HttpPost]
@@ -30,6 +34,12 @@ namespace BotMonitor.Controllers
                 instruction.Command = command;
                 await db.SaveChangesAsync();
             }
+        }
+
+        [HttpPost]
+        public async Task UpdateBotStatus()
+        {
+
         }
 
         [HttpGet]
